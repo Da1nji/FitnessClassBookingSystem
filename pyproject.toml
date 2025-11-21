@@ -1,0 +1,31 @@
+[project]
+name = "fitnessclassbookingsystem"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "daniil_linevych21",email = "dan4224rit@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "django (>=5.2.8,<6.0.0)",
+    "django-types (>=0.22.0,<0.23.0)",
+    "django-stubs-ext (>=5.2.7,<6.0.0)",
+    "django-environ (>=0.12.0,<0.13.0)",
+    "psycopg (>=3.2.12,<4.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "fitnessclassbookingsystem", from = "src"}]
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.0.1"
+pytest-django = "^4.11.1"
+autopep8 = "^2.3.2"
+flake8 = "^7.3.0"
+pre-commit = "^4.4.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
