@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [tool.poetry]
-packages = [{include = "fitnessclassbookingsystem", from = "src"}]
+packages = [{include = "fitness", from = "src"}]
 
 
 [tool.poetry.group.dev.dependencies]
