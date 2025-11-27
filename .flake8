@@ -8,5 +8,5 @@ exclude =
     .git,
     .github,
     .venv,
-    migrations,
+    */migrations/*,
     __pycache__
