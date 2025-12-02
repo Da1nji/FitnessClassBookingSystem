@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import FitnessClass, ClassType, Level
+from .models import FitnessClass, ClassType, Level, Booking
+from .services import BookingEmailService
 
 
 @admin.register(ClassType)
@@ -40,3 +41,31 @@ class FitnessClassAdmin(admin.ModelAdmin):
     list_editable = ['is_active']
     date_hierarchy = 'start_time'
     autocomplete_fields = ['class_type', 'level', 'instructor']
+
+
+@admin.register(Booking)
+class BookingAdmin(admin.ModelAdmin):
+    list_display = [
+        'user', 'fitness_class', 'status', 'is_email_confirmed',
+        'booked_at', 'confirmed_at'
+    ]
+    list_filter = ['status', 'is_email_confirmed', 'fitness_class__class_type']
+    search_fields = [
+        'user__username', 'user__email', 'user__first_name', 'user__last_name',
+        'fitness_class__name'
+    ]
+    list_editable = ['status']
+    readonly_fields = ['booked_at', 'confirmed_at', 'cancelled_at', 'confirmation_token']
+    autocomplete_fields = ['user', 'fitness_class']
+
+    actions = ['send_confirmation_emails', 'mark_as_attended', 'mark_as_no_show']
+
+    def send_confirmation_emails(self, request, queryset):
+        for booking in queryset:
+            try:
+                BookingEmailService.send_booking_confirmation_email(booking)
+            except Exception as e:
+                self.message_user(request, f"Failed to send email for {
+                                  booking}: {e}", level='error')
+        self.message_user(request, f"Confirmation emails sent for {queryset.count()} bookings.")
+    send_confirmation_emails.short_description = "Send confirmation emails"

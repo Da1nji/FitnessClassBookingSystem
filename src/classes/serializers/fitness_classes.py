@@ -63,6 +63,9 @@ class FitnessClassReadSerializer(serializers.ModelSerializer):
     is_upcoming = serializers.SerializerMethodField()
     is_past = serializers.SerializerMethodField()
     available_spots = serializers.SerializerMethodField()
+    is_fully_booked = serializers.SerializerMethodField()
+    can_be_booked = serializers.SerializerMethodField()
+    user_has_booking = serializers.SerializerMethodField()
 
     class Meta:
         model = FitnessClass
@@ -71,6 +74,7 @@ class FitnessClassReadSerializer(serializers.ModelSerializer):
             'duration_minutes', 'max_capacity', 'price',
             'start_time', 'end_time', 'is_active', 'is_cancelled',
             'is_upcoming', 'is_past', 'available_spots',
+            'is_fully_booked', 'can_be_booked', 'user_has_booking',
             'created_at', 'updated_at'
         ]
         read_only_fields = ['created_at', 'updated_at']
@@ -84,4 +88,16 @@ class FitnessClassReadSerializer(serializers.ModelSerializer):
         return obj.end_time < timezone.now()
 
     def get_available_spots(self, obj):
-        return obj.max_capacity
+        return obj.available_spots
+
+    def get_is_fully_booked(self, obj):
+        return obj.is_fully_booked
+
+    def get_can_be_booked(self, obj):
+        return obj.can_be_booked
+
+    def get_user_has_booking(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj.is_user_booked(request.user)
+        return False

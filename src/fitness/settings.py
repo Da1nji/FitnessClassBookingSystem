@@ -33,6 +33,14 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = "users.User"
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = env('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env('EMAIL_USE_TLS', default=True)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='<EMAIL_HOST_USER>')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='<EMAIL_HOST_PASSWORD>')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='<DEFAULT_FROM_EMAIL>')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -82,10 +90,14 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'fitness.urls'
 
+FRONTEND_URL = 'http://localhost:3000'
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
