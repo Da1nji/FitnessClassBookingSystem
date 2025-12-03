@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #2196F3; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f9f9f9; }
+        .footer { padding: 20px; text-align: center; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Class Reminder</h1>
+        </div>
+        <div class="content">
+            <h2>Hello {{ user.first_name }} {{ user.last_name }},</h2>
+            <p>This is a friendly reminder about your upcoming class:</p>
+            
+            <h3>Class Details:</h3>
+            <ul>
+                <li><strong>Class:</strong> {{ fitness_class.name }}</li>
+                <li><strong>Type:</strong> {{ fitness_class.class_type.name }}</li>
+                <li><strong>Instructor:</strong> {{ fitness_class.instructor.user.get_full_name|default:"TBA" }}</li>
+                <li><strong>Date & Time:</strong> {{ fitness_class.start_time|date:"F j, Y g:i A" }}</li>
+                <li><strong>Duration:</strong> {{ fitness_class.duration_minutes }} minutes</li>
+                <li><strong>Location:</strong> Main Studio</li>
+            </ul>
+            
+            <p>Please arrive 10 minutes early to get settled.</p>
+            <p>Don't forget to bring water and a towel!</p>
+        </div>
+        <div class="footer">
+            <p>See you soon!</p>
+        </div>
+    </div>
+</body>
+</html>

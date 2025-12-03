@@ -26,11 +26,23 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY', default='<SECRET_KEY>')
 
+OPENAI_API_KEY = env('OPENAI_API_KEY', default='<OPEN_API_KEY>')
+ANTHROPIC_API_KEY = env('ANTHROPIC_API_KEY', default='<ANTHROPIC_API_KEY>')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=True)
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = "users.User"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = env('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env('EMAIL_USE_TLS', default=True)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='<EMAIL_HOST_USER>')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='<EMAIL_HOST_PASSWORD>')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='<DEFAULT_FROM_EMAIL>')
 
 # Application definition
 
@@ -41,6 +53,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
+    'django_filters',
+    'drf_yasg',
+    'users',
+    'instructors',
+    'classes',
 ]
 
 MIDDLEWARE = [
@@ -53,12 +72,35 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ]
+}
+
+CORS_ALLOW_ALL_ORIGINS = True
+
 ROOT_URLCONF = 'fitness.urls'
+
+FRONTEND_URL = 'http://localhost:3000'
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
